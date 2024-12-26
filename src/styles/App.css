@@ -36,3 +36,71 @@
     transform: rotate(360deg);
   }
 }
+
+/* 기본 설정 */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* 가로 스크롤 제거 */
+}
+
+/* 첫 번째 테이블 스타일 */
+.table1 {
+  max-width: 100%; /* 테이블 너비를 화면 너비에 맞춤 */
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* 첫 번째 테이블의 헤더 스타일 */
+.table1 th {
+  background-color: #5F9EA0; /* 캐딜락블루 */
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+/* 첫 번째 테이블의 데이터 셀 스타일 */
+.table1 td {
+  border: 1px solid #ddd;
+  background-color: #d9eaf7; /* 옅은 블루 */
+  padding: 8px;
+  text-align: center;
+  word-wrap: break-word; /* 긴 텍스트 줄바꿈 */
+}
+
+/* 첫 번째 테이블의 두 번째 행 스타일 */
+.table1 tr:nth-child(2) {
+  background-color: #ffffff; /* 흰색 */
+}
+
+/* 두 번째 테이블 스타일 */
+.table2 {
+  max-width: 100%; /* 테이블 너비를 화면 너비에 맞춤 */
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* 두 번째 테이블의 헤더 스타일 */
+.table2 th {
+  background-color: #A9A9A9; /* 연한 회색 */
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+/* 두 번째 테이블의 데이터 셀 스타일 */
+.table2 td {
+  border: 1px solid #ddd;
+  background-color: #F5F5F5; /* 매우 연한 회색  */
+  padding: 8px;
+  text-align: center;
+  word-wrap: break-word; /* 긴 텍스트 줄바꿈 */
+}
+
+/* 추가적인 안전 조치 */
+html, body {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
