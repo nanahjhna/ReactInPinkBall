@@ -38,10 +38,102 @@ function App() {
     setRows(rows => rows.map(row => (row.id === id ? { ...row, [key]: value } : row)));
   };
 
+  // 청팀 행을 추가하는 함수
+  const addRow = (setRows, rows) => {
+    const newRow = {
+      id: rows.length + 1,
+      name: `신입 ${rows.length + 1}`,
+      attendance: 0,
+      goal: '0',
+      assist: '0',
+      defense: 0,
+      mvp: 0,
+    };
+    setRows([...rows, newRow]); // 새로운 행 추가
+  };
+
+  // 백팀 행을 추가하는 함수
+  const addRow2 = (setRows2, rows2) => {
+    const newRow = {
+      id: rows2.length + 1,
+      name: `신입 ${rows2.length + 1}`,
+      attendance: 0,
+      goal: '0',
+      assist: '0',
+      defense: 0,
+      mvp: 0,
+    };
+    setRows2([...rows2, newRow]); // 새로운 행 추가
+  };
+
+  // 청팀 테이블 데이터를 ArrayList 형태로 집계하는 함수
+  const aggregateData = () => {
+    // mvp가 1인 사람들만 필터링
+    const mvpPlayers = rows2.filter(row => row.mvp === 1);
+
+    // MVP 선수 이름 출력 (여러 명일 수 있기 때문에 배열로 출력)
+    if (mvpPlayers.length > 0) {
+      const mvpNames = mvpPlayers.map(player => player.name).join(", ");
+      alert(`MVP 선수: ${mvpNames}`);
+    } else {
+      alert("MVP 선수가 없습니다.");
+    }
+
+    // 청 추가적인 집계도 가능, 예: 골, 어시스트 등
+    const blueAggregatedData = rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      attendance: row.attendance,
+      goal: row.goal,
+      assist: row.assist,
+      defense: row.defense,
+      mvp: row.mvp,
+    }));
+
+    // 각 행에 대한 정보를 alert로 출력
+    blueAggregatedData.forEach(row => {
+      alert(`
+        이름: ${row.name}
+        출석: ${row.attendance === 1 ? '1' : '0'}
+        득점: ${row.goal}
+        어시스트: ${row.assist}
+        수비: ${row.defense}
+        MVP: ${row.mvp === 1 ? '1' : '0'}
+      `);
+    });
+
+    // 백 추가적인 집계도 가능, 예: 골, 어시스트 등
+    const whiteAggregatedData = rows2.map(row => ({
+      id: row.id,
+      name: row.name,
+      attendance: row.attendance,
+      goal: row.goal,
+      assist: row.assist,
+      defense: row.defense,
+      mvp: row.mvp,
+    }));
+
+    // 각 행에 대한 정보를 alert로 출력
+    whiteAggregatedData.forEach(row => {
+      alert(`
+            이름: ${row.name}
+            출석: ${row.attendance === 1 ? '1' : '0'}
+            득점: ${row.goal}
+            어시스트: ${row.assist}
+            수비: ${row.defense}
+            MVP: ${row.mvp === 1 ? '1' : '0'}
+          `);
+    });
+  };
+
+
+
   return (
     <div className="App">
       {/* 첫 번째 표 */}
       <h2>청팀</h2>
+      <button onClick={aggregateData}>집계하기</button>
+      <button onClick={() => addRow(setRows, rows)}>행 추가</button>
       <table className="table1">
         <thead>
           <tr>
@@ -117,6 +209,8 @@ function App() {
 
       {/* 두 번째 표 */}
       <h2>백팀</h2>
+      <button onClick={() => addRow2(setRows2, rows2)}>행 추가</button>
+
       <table className="table2">
         <thead>
           <tr>
