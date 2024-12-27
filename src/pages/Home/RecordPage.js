@@ -130,10 +130,9 @@ function App() {
 
   return (
     <div className="App">
-      {/* 첫 번째 표 */}
-      <h2>청팀</h2>
       <button onClick={aggregateData}>집계하기</button>
-      <button onClick={() => addRow(setRows, rows)}>행 추가</button>
+      {/* 첫 번째 표 */}
+      <h2>청팀<button onClick={() => addRow(setRows, rows)}>행 추가</button></h2>
       <table className="table1">
         <thead>
           <tr>
@@ -161,24 +160,36 @@ function App() {
                 </div>
               </td>
               <td>
-                <select
-                  value={row.goal}
-                  onChange={(e) => updateRow(row.id, 'goal', e.target.value, setRows)} // 득점 변경
-                >
-                  {Array.from({ length: 10 }, (_, i) => (
-                    <option key={i} value={i.toString()}>{i}</option>
-                  ))}
-                </select>
+                <div>
+                  <input
+                    type="number"
+                    value={row.goal}
+                    min="0"
+                    readOnly
+                  />
+                  <button onClick={() => updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), setRows)}>
+                    -
+                  </button>
+                  <button onClick={() => updateRow(row.id, 'goal', parseInt(row.goal) + 1, setRows)}>
+                    +
+                  </button>
+                </div>
               </td>
               <td>
-                <select
-                  value={row.assist}
-                  onChange={(e) => updateRow(row.id, 'assist', e.target.value, setRows)} // 어시스트 변경
-                >
-                  {Array.from({ length: 10 }, (_, i) => (
-                    <option key={i} value={i.toString()}>{i}</option>
-                  ))}
-                </select>
+                <div>
+                  <input
+                    type="number"
+                    value={row.assist}
+                    min="0"
+                    readOnly
+                  />
+                  <button onClick={() => updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), setRows)}>
+                    -
+                  </button>
+                  <button onClick={() => updateRow(row.id, 'assist', parseInt(row.assist) + 1, setRows)}>
+                    +
+                  </button>
+                </div>
               </td>
               <td>
                 <div>
@@ -208,9 +219,7 @@ function App() {
       </table>
 
       {/* 두 번째 표 */}
-      <h2>백팀</h2>
-      <button onClick={() => addRow2(setRows2, rows2)}>행 추가</button>
-
+      <h2>백팀 <button onClick={() => addRow2(setRows2, rows2)}>행 추가</button></h2>
       <table className="table2">
         <thead>
           <tr>
@@ -238,25 +247,38 @@ function App() {
                 </div>
               </td>
               <td>
-                <select
-                  value={row.goal}
-                  onChange={(e) => updateRow(row.id, 'goal', e.target.value, setRows2)} // 득점 변경
-                >
-                  {Array.from({ length: 10 }, (_, i) => (
-                    <option key={i} value={i.toString()}>{i}</option>
-                  ))}
-                </select>
+                <div>
+                  <input
+                    type="number"
+                    value={row.goal}
+                    min="0"
+                    readOnly
+                  />
+                  <button onClick={() => updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), setRows2)}>
+                    -
+                  </button>
+                  <button onClick={() => updateRow(row.id, 'goal', parseInt(row.goal) + 1, setRows2)}>
+                    +
+                  </button>
+                </div>
               </td>
               <td>
-                <select
-                  value={row.assist}
-                  onChange={(e) => updateRow(row.id, 'assist', e.target.value, setRows2)} // 어시스트 변경
-                >
-                  {Array.from({ length: 10 }, (_, i) => (
-                    <option key={i} value={i.toString()}>{i}</option>
-                  ))}
-                </select>
+                <div>
+                  <input
+                    type="number"
+                    value={row.assist}
+                    min="0"
+                    readOnly
+                  />
+                  <button onClick={() => updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), setRows2)}>
+                    -
+                  </button>
+                  <button onClick={() => updateRow(row.id, 'assist', parseInt(row.assist) + 1, setRows2)}>
+                    +
+                  </button>
+                </div>
               </td>
+
               <td>
                 <div>
                   <label>
