@@ -1,0 +1,30 @@
+/* header 스타일 */
+.header {
+  background-color: red;
+  padding: 10px;
+  display: flex;
+  align-items: center; /* Flexbox로 자식 요소를 세로 중앙 정렬 */
+}
+
+/* nav 링크 스타일 */
+.header nav {
+  display: flex;
+  align-items: center; /* 링크들을 수직 정렬 */
+}
+
+.header nav a {
+  color: white;
+  margin-right: 15px;
+  text-decoration: none;
+  line-height: 1; /* 글자가 로고와 동일 선상에 위치하도록 */
+  font-size: 16px; /* 글자 크기 조정 (선택 사항) */
+  display: flex;
+  align-items: center; /* 각 링크 안의 텍스트를 수직 정렬 */
+}
+
+/* 로고 이미지 스타일 */
+.header nav a img {
+  width: 50px;
+  height: auto;
+  margin-right: 8px; /* 로고와 텍스트 간 간격 */
+}

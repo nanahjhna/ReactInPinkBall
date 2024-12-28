@@ -1,9 +1,9 @@
-import '../styles/App.css'; // 스타일 시트를 불러옵니다
+import '../styles/RecordPage.css'; // 스타일 시트를 불러옵니다
 import React, { useState } from 'react'; // React와 useState 훅을 불러옵니다
 // 비즈니스 로직 가져오기
 import { addRow, addRow2, updateRow, aggregateData } from '../services/RecordPageService.js';
 
-function App() {
+function RecordPage() {
   // 첫 번째 표의 사용자 정보 (rows)
   // 10명의 사용자 데이터를 초기화합니다.
   const [rows, setRows] = useState(
@@ -240,4 +240,4 @@ function App() {
   );
 }
 
-export default App;
+export default RecordPage;
