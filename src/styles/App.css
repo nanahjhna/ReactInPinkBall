@@ -99,14 +99,14 @@ body {
 
 /* 청팀 테이블 */
 .table1 input[type="number"] {
-  width: 15px;
-  text-align: right; /* 필요에 따라 조정 */
+  width: 30px;
+  text-align: left; /* 필요에 따라 조정 */
 }
 
 /* 백팀 테이블 */
 .table2 input[type="number"] {
-  width: 15px;
-  text-align: right; /* 필요에 따라 조정 */
+  width: 30px;
+  text-align: left; /* 필요에 따라 조정 */
 }
 
 /* 추가적인 안전 조치 */
