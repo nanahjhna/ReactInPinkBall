@@ -1,7 +1,7 @@
-// Home.js
-import '../../styles/App.css'; // 스타일 시트를 불러옵니다
-import logo from '../../logo.svg'; // 로고 이미지를 불러옵니다 (현재 사용되지 않음)
+import '../styles/App.css'; // 스타일 시트를 불러옵니다
 import React, { useState } from 'react'; // React와 useState 훅을 불러옵니다
+// 비즈니스 로직 가져오기
+import { addRow, addRow2, updateRow, aggregateData } from '../services/RecordPageService.js';
 
 function App() {
   // 첫 번째 표의 사용자 정보 (rows)
@@ -32,107 +32,34 @@ function App() {
     }))
   );
 
-  // 행을 업데이트하는 함수 (두 표에 공통적으로 사용)
-  // 특정 행의 값을 업데이트합니다. (출석, 득점, 어시스트 등)
-  const updateRow = (id, key, value, setRows) => {
-    setRows(rows => rows.map(row => (row.id === id ? { ...row, [key]: value } : row)));
-  };
-
-  // 청팀 행을 추가하는 함수
-  const addRow = (setRows, rows) => {
-    const newRow = {
-      id: rows.length + 1,
-      name: `신입 ${rows.length + 1}`,
+    // 초기 데이터 정의
+    const initialRows = Array.from({ length: 10 }, (_, index) => ({
+      id: index + 1,
+      name: `사용자 ${index + 1}`,
       attendance: 0,
       goal: '0',
       assist: '0',
       defense: 0,
       mvp: 0,
-    };
-    setRows([...rows, newRow]); // 새로운 행 추가
-  };
-
-  // 백팀 행을 추가하는 함수
-  const addRow2 = (setRows2, rows2) => {
-    const newRow = {
-      id: rows2.length + 1,
-      name: `신입 ${rows2.length + 1}`,
-      attendance: 0,
-      goal: '0',
-      assist: '0',
-      defense: 0,
-      mvp: 0,
-    };
-    setRows2([...rows2, newRow]); // 새로운 행 추가
-  };
-
-  // 청팀 테이블 데이터를 ArrayList 형태로 집계하는 함수
-  const aggregateData = () => {
-    // mvp가 1인 사람들만 필터링
-    const mvpPlayers = rows2.filter(row => row.mvp === 1);
-
-    // MVP 선수 이름 출력 (여러 명일 수 있기 때문에 배열로 출력)
-    if (mvpPlayers.length > 0) {
-      const mvpNames = mvpPlayers.map(player => player.name).join(", ");
-      alert(`MVP 선수: ${mvpNames}`);
-    } else {
-      alert("MVP 선수가 없습니다.");
-    }
-
-    // 청 추가적인 집계도 가능, 예: 골, 어시스트 등
-    const blueAggregatedData = rows.map(row => ({
-      id: row.id,
-      name: row.name,
-      attendance: row.attendance,
-      goal: row.goal,
-      assist: row.assist,
-      defense: row.defense,
-      mvp: row.mvp,
     }));
-
-    // 각 행에 대한 정보를 alert로 출력
-    blueAggregatedData.forEach(row => {
-      alert(`
-        이름: ${row.name}
-        출석: ${row.attendance === 1 ? '1' : '0'}
-        득점: ${row.goal}
-        어시스트: ${row.assist}
-        수비: ${row.defense}
-        MVP: ${row.mvp === 1 ? '1' : '0'}
-      `);
-    });
-
-    // 백 추가적인 집계도 가능, 예: 골, 어시스트 등
-    const whiteAggregatedData = rows2.map(row => ({
-      id: row.id,
-      name: row.name,
-      attendance: row.attendance,
-      goal: row.goal,
-      assist: row.assist,
-      defense: row.defense,
-      mvp: row.mvp,
-    }));
-
-    // 각 행에 대한 정보를 alert로 출력
-    whiteAggregatedData.forEach(row => {
-      alert(`
-            이름: ${row.name}
-            출석: ${row.attendance === 1 ? '1' : '0'}
-            득점: ${row.goal}
-            어시스트: ${row.assist}
-            수비: ${row.defense}
-            MVP: ${row.mvp === 1 ? '1' : '0'}
-          `);
-    });
+    
+  // 첫 번째 테이블 초기화
+  const resetRows = () => {
+    setRows([...initialRows]); // setRows에 초기값을 전달
   };
 
-
+  // 두 번째 테이블 초기화
+  const resetRows2 = () => {
+    setRows2([...initialRows]); // setRows2에 초기값을 전달
+  };
 
   return (
     <div className="App">
-      <button onClick={aggregateData}>집계하기</button>
       {/* 첫 번째 표 */}
-      <h2>청팀<button onClick={() => addRow(setRows, rows)}>행 추가</button></h2>
+      <h2>청팀
+        <button onClick={() => setRows(addRow(rows))}>행 추가</button>
+        <button onClick={resetRows}>초기화</button>
+              </h2>
       <table className="table1">
         <thead>
           <tr>
@@ -154,7 +81,7 @@ function App() {
                     <input
                       type="checkbox"
                       checked={row.attendance === 1} // 출석 여부를 체크박스로 표시
-                      onChange={() => updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, setRows)} // 출석 상태 변경
+                      onChange={() => setRows(updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, rows))} // 출석 상태 변경
                     />
                   </label>
                 </div>
@@ -167,10 +94,10 @@ function App() {
                     min="0"
                     readOnly
                   />
-                  <button onClick={() => updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), setRows)}>
+                  <button onClick={() => setRows(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows))}>
                     -
                   </button>
-                  <button onClick={() => updateRow(row.id, 'goal', parseInt(row.goal) + 1, setRows)}>
+                  <button onClick={() => setRows(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows))}>
                     +
                   </button>
                 </div>
@@ -183,10 +110,10 @@ function App() {
                     min="0"
                     readOnly
                   />
-                  <button onClick={() => updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), setRows)}>
+                  <button onClick={() => setRows(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows))}>
                     -
                   </button>
-                  <button onClick={() => updateRow(row.id, 'assist', parseInt(row.assist) + 1, setRows)}>
+                  <button onClick={() => setRows(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows))}>
                     +
                   </button>
                 </div>
@@ -197,7 +124,7 @@ function App() {
                     <input
                       type="checkbox"
                       checked={row.defense === 1} // 수비 여부를 체크박스로 표시
-                      onChange={() => updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, setRows)} // 수비 상태 변경
+                      onChange={() => setRows(updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, rows))} // 수비 상태 변경
                     />
                   </label>
                 </div>
@@ -208,7 +135,7 @@ function App() {
                     <input
                       type="checkbox"
                       checked={row.mvp === 1} // MVP 여부를 체크박스로 표시
-                      onChange={() => updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, setRows)} // MVP 상태 변경
+                      onChange={() => setRows(updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, rows))} // MVP 상태 변경
                     />
                   </label>
                 </div>
@@ -219,7 +146,10 @@ function App() {
       </table>
 
       {/* 두 번째 표 */}
-      <h2>백팀 <button onClick={() => addRow2(setRows2, rows2)}>행 추가</button></h2>
+      <h2>백팀
+        <button onClick={() => setRows2(addRow2(rows2))}>행 추가</button>
+        <button onClick={resetRows2}>초기화</button>
+      </h2>
       <table className="table2">
         <thead>
           <tr>
@@ -241,7 +171,7 @@ function App() {
                     <input
                       type="checkbox"
                       checked={row.attendance === 1} // 출석 여부를 체크박스로 표시
-                      onChange={() => updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, setRows2)} // 출석 상태 변경
+                      onChange={() => setRows2(updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, rows2))} // 출석 상태 변경
                     />
                   </label>
                 </div>
@@ -254,10 +184,10 @@ function App() {
                     min="0"
                     readOnly
                   />
-                  <button onClick={() => updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), setRows2)}>
+                  <button onClick={() => setRows2(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows2))}>
                     -
                   </button>
-                  <button onClick={() => updateRow(row.id, 'goal', parseInt(row.goal) + 1, setRows2)}>
+                  <button onClick={() => setRows2(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows2))}>
                     +
                   </button>
                 </div>
@@ -270,10 +200,10 @@ function App() {
                     min="0"
                     readOnly
                   />
-                  <button onClick={() => updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), setRows2)}>
+                  <button onClick={() => setRows2(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows2))}>
                     -
                   </button>
-                  <button onClick={() => updateRow(row.id, 'assist', parseInt(row.assist) + 1, setRows2)}>
+                  <button onClick={() => setRows2(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows2))}>
                     +
                   </button>
                 </div>
@@ -285,7 +215,7 @@ function App() {
                     <input
                       type="checkbox"
                       checked={row.defense === 1} // 수비 여부를 체크박스로 표시
-                      onChange={() => updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, setRows2)} // 수비 상태 변경
+                      onChange={() => setRows2(updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, rows2))} // 수비 상태 변경
                     />
                   </label>
                 </div>
@@ -296,7 +226,7 @@ function App() {
                     <input
                       type="checkbox"
                       checked={row.mvp === 1} // MVP 여부를 체크박스로 표시
-                      onChange={() => updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, setRows2)} // MVP 상태 변경
+                      onChange={() => setRows2(updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, rows2))} // MVP 상태 변경
                     />
                   </label>
                 </div>
@@ -305,6 +235,7 @@ function App() {
           ))}
         </tbody>
       </table>
+      <h2><button onClick={() => aggregateData(rows, rows2)}>집계하기</button></h2>
     </div>
   );
 }
