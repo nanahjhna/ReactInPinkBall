@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import clearLogo from '../assets/clearLogo.png';
 import '../styles/mainPage.css';
 import RecordPage from './RecordPage';
-import { gapi } from "gapi-script";
+import gapi from 'gapi-script';
 
 // Google Sheets API를 사용하려면 정확한 스프레드시트 ID와 범위가 필요합니다.
 const SPREADSHEET_ID = "1lceeIMn6B_-DJABboN6vcTe5jdOz8GvfYX6nVdPe3DU"; // 스프레드시트 ID
