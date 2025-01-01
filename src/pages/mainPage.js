@@ -1,7 +1,10 @@
 // React와 필요한 라이브러리들을 import
 import React, { useEffect, useState } from "react";
-import '../styles/mainPage.css'; // 스타일 파일 import
-import { gapi } from "gapi-script"; // Google API 클라이언트를 사용하기 위해 gapi import
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import clearLogo from '../assets/clearLogo.png';
+import '../styles/mainPage.css';
+import RecordPage from './RecordPage';
+import { gapi } from 'gapi-script';
 
 // Google Spreadsheet 관련 변수들
 const SPREADSHEET_ID = "1lceeIMn6B_-DJABboN6vcTe5jdOz8GvfYX6nVdPe3DU"; // 사용할 Google 스프레드시트 ID
