@@ -1,0 +1,74 @@
+/* header 스타일 */
+.header {
+  background-color: red;
+  padding: 10px;
+  display: flex;
+  align-items: center; /* Flexbox로 자식 요소를 세로 중앙 정렬 */
+}
+
+/* nav 링크 스타일 */
+.header nav {
+  display: flex;
+  align-items: center; /* 링크들을 수직 정렬 */
+}
+
+.header nav a {
+  color: white;
+  margin-right: 15px;
+  text-decoration: none;
+  line-height: 1; /* 글자가 로고와 동일 선상에 위치하도록 */
+  font-size: 16px; /* 글자 크기 조정 (선택 사항) */
+  display: flex;
+  align-items: center; /* 각 링크 안의 텍스트를 수직 정렬 */
+}
+
+/* 로고 이미지 스타일 */
+.header nav a img {
+  width: 50px;
+  height: auto;
+  margin-right: 8px; /* 로고와 텍스트 간 간격 */
+}
+
+/* 기본 설정 */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* 가로 스크롤 제거 */
+  background-color: #FFB6C1; /* 연한 핑크 */
+}
+
+/* 테이블 스타일 */
+.table {
+  max-width: 100%; /* 테이블 너비를 화면 너비에 맞춤 */
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* 테이블의 헤더 스타일 */
+.table th {
+  background-color: #A9A9A9; /* 연한 회색 */
+  border: 1px solid #000000;
+  padding: 8px;
+  text-align: center;
+}
+
+/* 테이블의 데이터 셀 스타일 */
+.table td {
+  border: 1px solid #000000;
+  background-color: #F5F5F5; /* 매우 연한 회색  */
+  padding: 8px;
+  text-align: center;
+  word-wrap: break-word; /* 긴 텍스트 줄바꿈 */
+}
+
+/* 테이블 */
+.table input[type="number"] {
+  width: 30px;
+  text-align: left; /* 필요에 따라 조정 */
+}
+
+/* 추가적인 안전 조치 */
+html, body {
+  width: 100%;
+  box-sizing: border-box;
+}

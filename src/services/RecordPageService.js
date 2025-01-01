@@ -1,12 +1,32 @@
+import axios from 'axios';
+
+
+
+// 스프레드시트 데이터 가져오기
+export const fetchSpreadsheetData = async () => {
+  const SHEET_ID = "1lceeIMn6B_-DJABboN6vcTe5jdOz8GvfYX6nVdPe3DU"; // 사용할 Google 스프레드시트 ID
+  const API_KEY = "AIzaSyAKnbmtCHWHmNTWW7hwq09GmAo11uHxZQk"; // GCP에서 발급받은 API 키
+  const RANGE = "회원명부!A1:E100"; // 데이터를 가져올 범위
+
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+  const response = await axios.get(url);
+
+  if (response.status === 200) {
+    return response.data.values; // 데이터 반환
+  } else {
+    throw new Error('Google Sheets API 호출 실패');
+  }
+};
+
 // 특정 행의 값을 업데이트
-export const updateRow = (id, key, value, rows) => 
+export const updateRow = (id, key, value, rows) =>
   rows.map(row => (row.id === id ? { ...row, [key]: value } : row));
 
 // 새로운 행 추가
 export const addRow = (rows, teamName = '신입') => {
   const newRow = {
     id: rows.length + 1,
-    name: `${teamName} ${rows.length + 1}`,
+    name: `${teamName}`,
     attendance: 0,
     goal: '0',
     assist: '0',
@@ -16,18 +36,19 @@ export const addRow = (rows, teamName = '신입') => {
   return [...rows, newRow];
 };
 
-export const addRow2 = (rows, teamName = '신입') => {
-  const newRow = {
-    id: rows.length + 1,
-    name: `${teamName} ${rows.length + 1}`,
-    attendance: 0,
-    goal: '0',
-    assist: '0',
-    defense: 0,
-    mvp: 0,
+  // 백팀에 행 추가 함수
+  export const addRow2 = (rows2, teamName = '신입') => {
+    const newRow = {
+      id: rows2.length + 1,
+      name: `${teamName}`,
+      attendance: 0,
+      goal: '0',
+      assist: '0',
+      defense: 0,
+      mvp: 0,
+    };
+    return [...rows2, newRow]; // 기존 배열에 새 행을 추가한 새로운 배열 반환
   };
-  return [...rows, newRow];
-};
 
 // 데이터 합산 및 결과 메시지 생성
 // aggregateData 함수를 매개변수 기반으로 변경
@@ -36,37 +57,46 @@ export const aggregateData = (blueTeamRows, whiteTeamRows) => {
 
   // 예/아니요 확인 창 표시
   if (window.confirm(confirmMessage)) {
-      alert("집계를 진행합니다.");
+    alert("집계를 진행합니다.");
 
-      // 청팀과 백팀의 데이터 합산
-      const blueTeamGoalsSum = blueTeamRows.reduce((sum, row) => sum + parseInt(row.goal), 0);
-      const whiteTeamGoalsSum = whiteTeamRows.reduce((sum, row) => sum + parseInt(row.goal), 0);
+    // 청팀과 백팀의 데이터 합산
+    const blueTeamGoalsSum = blueTeamRows.reduce((sum, row) => sum + parseInt(row.goal), 0);
+    const whiteTeamGoalsSum = whiteTeamRows.reduce((sum, row) => sum + parseInt(row.goal), 0);
 
-      const blueGoalScorers = blueTeamRows.filter(row => parseInt(row.goal) > 0).map(row => `${row.name}${row.goal}`);
-      const blueAssistScorers = blueTeamRows.filter(row => parseInt(row.assist) > 0).map(row => `${row.name}${row.assist}`);
+    const blueGoalScorers = blueTeamRows.filter(row => parseInt(row.goal) > 0).map(row => `${row.name}${row.goal}`);
+    const blueAssistScorers = blueTeamRows.filter(row => parseInt(row.assist) > 0).map(row => `${row.name}${row.assist}`);
 
-      const whiteGoalScorers = whiteTeamRows.filter(row => parseInt(row.goal) > 0).map(row => `${row.name}${row.goal}`);
-      const whiteAssistScorers = whiteTeamRows.filter(row => parseInt(row.assist) > 0).map(row => `${row.name}${row.assist}`);
+    const whiteGoalScorers = whiteTeamRows.filter(row => parseInt(row.goal) > 0).map(row => `${row.name}${row.goal}`);
+    const whiteAssistScorers = whiteTeamRows.filter(row => parseInt(row.assist) > 0).map(row => `${row.name}${row.assist}`);
 
-      const blueMVPs = blueTeamRows.filter(row => row.mvp === 1).map(row => row.name);
-      const whiteMVPs = whiteTeamRows.filter(row => row.mvp === 1).map(row => row.name);
+    const blueMVPs = blueTeamRows.filter(row => row.mvp === 1).map(row => row.name);
+    const whiteMVPs = whiteTeamRows.filter(row => row.mvp === 1).map(row => row.name);
 
-      const blueDf = blueTeamRows.filter(row => row.defense === 1).map(row => row.name);
-      const whiteDf = whiteTeamRows.filter(row => row.defense === 1).map(row => row.name);
+    const blueDf = blueTeamRows.filter(row => row.defense === 1).map(row => row.name);
+    const whiteDf = whiteTeamRows.filter(row => row.defense === 1).map(row => row.name);
 
-      const mvpMessage = blueTeamGoalsSum > whiteTeamGoalsSum
-          ? `MVP(청팀)
+    // 현재 날짜를 YYYY년MM월DD일 형식으로 가져오기
+    const getCurrentDate = () => {
+      const today = new Date();
+      const year = today.getFullYear().toString().slice(2); // 24년 형식으로 표시
+      const month = (today.getMonth() + 1).toString().padStart(2, '0'); // 두 자리로 표시
+      const day = today.getDate().toString().padStart(2, '0'); // 두 자리로 표시
+      return `${year}년${month}월${day}일`;
+    };
+
+    const mvpMessage = blueTeamGoalsSum > whiteTeamGoalsSum
+      ? `MVP(청팀)
       레전드 - ${blueMVPs[0] || '미선정'}
       청년 - ${blueMVPs[1] || '미선정'} `
-          : whiteTeamGoalsSum > blueTeamGoalsSum
-              ? `MVP(백팀)
+      : whiteTeamGoalsSum > blueTeamGoalsSum
+        ? `MVP(백팀)
       레전드 - ${whiteMVPs[0] || '미선정'}
       청년 - ${whiteMVPs[1] || '미선정'} `
-              : 'MVP 없음';
+        : 'MVP 없음';
 
-      // 결과 메시지 작성
-      const resultMessage = `
-  *24년12월08일 경기결과*
+    // 결과 메시지 작성
+    const resultMessage = `
+  *${getCurrentDate()} 경기결과*
   ■청백전
   ${blueTeamGoalsSum}대${whiteTeamGoalsSum} ${blueTeamGoalsSum > whiteTeamGoalsSum ? '청팀승' : whiteTeamGoalsSum > blueTeamGoalsSum ? '백팀승' : '무승부'}
   
@@ -91,9 +121,10 @@ export const aggregateData = (blueTeamRows, whiteTeamRows) => {
   오늘 하루 고생하셨습니다
       `;
 
-      alert(resultMessage);
+    // 결과를 상태에 업데이트
+    return resultMessage;
   } else {
-      alert("집계를 취소합니다.");
+    alert("집계를 취소합니다.");
   }
 };
 
