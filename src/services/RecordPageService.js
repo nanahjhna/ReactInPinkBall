@@ -2,11 +2,27 @@ import axios from 'axios';
 
 
 
-// 스프레드시트 데이터 가져오기
-export const fetchSpreadsheetData = async () => {
+// 청팀 스프레드시트 데이터 가져오기
+export const blueTeamNameData = async () => {
   const SHEET_ID = "1lceeIMn6B_-DJABboN6vcTe5jdOz8GvfYX6nVdPe3DU"; // 사용할 Google 스프레드시트 ID
   const API_KEY = "AIzaSyAKnbmtCHWHmNTWW7hwq09GmAo11uHxZQk"; // GCP에서 발급받은 API 키
-  const RANGE = "회원명부!A1:E100"; // 데이터를 가져올 범위
+  const RANGE = "기록!B8:B47"; // 데이터를 가져올 범위
+
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+  const response = await axios.get(url);
+
+  if (response.status === 200) {
+    return response.data.values; // 데이터 반환
+  } else {
+    throw new Error('Google Sheets API 호출 실패');
+  }
+};
+
+// 백팀 스프레드시트 데이터 가져오기
+export const whiteTeamNameData = async () => {
+  const SHEET_ID = "1lceeIMn6B_-DJABboN6vcTe5jdOz8GvfYX6nVdPe3DU"; // 사용할 Google 스프레드시트 ID
+  const API_KEY = "AIzaSyAKnbmtCHWHmNTWW7hwq09GmAo11uHxZQk"; // GCP에서 발급받은 API 키
+  const RANGE = "기록!L8:L47"; // 데이터를 가져올 범위
 
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
   const response = await axios.get(url);

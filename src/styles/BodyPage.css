@@ -1,18 +1,25 @@
+/* body 스타일 */
+body {
+  background-color: white; /* 배경을 흰색으로 설정 */
+  margin: 0; /* 기본 마진 제거 (선택 사항) */
+  font-family: Arial, sans-serif; /* 기본 폰트 설정 (선택 사항) */
+}
+
 /* header 스타일 */
-.header {
-  background-color: #282c34;
+header {
+  background-color: red; /* 배경을 빨간색으로 변경 */
   padding: 10px;
   display: flex;
   align-items: center; /* Flexbox로 자식 요소를 세로 중앙 정렬 */
 }
 
 /* nav 링크 스타일 */
-.header nav {
+header nav {
   display: flex;
   align-items: center; /* 링크들을 수직 정렬 */
 }
 
-.header nav a {
+header nav a {
   color: white;
   margin-right: 15px;
   text-decoration: none;
@@ -23,17 +30,31 @@
 }
 
 /* 로고 이미지 스타일 */
-.header nav a img {
+header nav a img {
   width: 50px;
   height: auto;
   margin-right: 8px; /* 로고와 텍스트 간 간격 */
 }
 
 /* footer 스타일 */
-.footer {
-  background-color: #282c34;
+footer {
+  background-color: red; /* 배경을 빨간색으로 변경 */
   color: white;
   padding: 1px;
   text-align: center;
-  margin-top: 400px;
+  margin-top: 210px;
+}
+
+table {
+  max-width: 100%;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto; /* 테이블 길이를 내용에 맞게 자동으로 조정 */
+  word-wrap: break-word; /* 긴 텍스트 줄바꿈 */
+}
+
+h1 {
+  text-align: center;
+  color: #333; /* 텍스트 색상 */
+  font-size: 2em; /* 글자 크기 */
 }
