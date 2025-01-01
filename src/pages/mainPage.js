@@ -1,9 +1,6 @@
 // React와 필요한 라이브러리들을 import
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import clearLogo from '../assets/clearLogo.png';
 import '../styles/mainPage.css';
-import RecordPage from './RecordPage';
 import { gapi } from 'gapi-script';
 
 // Google Spreadsheet 관련 변수들
@@ -65,7 +62,7 @@ function App() {
         <div>
           {currentPage === "main" && ( // 현재 페이지가 'main'일 경우에만 실행
             <>
-              <h1>{new Date().getFullYear()}년 {new Date().getMonth() + 1}월 <br />생일 회원</h1> {/* 현재 연도와 월 표시 */}
+              <h1>{new Date().getFullYear().toString().slice(-2)}년 {new Date().getMonth() + 1}월 생일 회원</h1> {/* 현재 연도와 월 표시 */}
               {data.length === 0 ? ( // 데이터가 없으면 로딩 메시지 표시
                 <p>Loading...</p>
               ) : ( // 데이터가 있으면 테이블로 표시
@@ -98,7 +95,7 @@ function App() {
               )}
             </>
           )}
-          <h2>생일 축하드립니다^^</h2> {/* 생일 축하 메시지 */}
+          <h1>생일 축하드립니다^^</h1> {/* 생일 축하 메시지 */}
         </div>
 
       </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/RecordPage.css'; // 스타일 시트 불러오기
-import { addRow, addRow2, updateRow, aggregateData, fetchSpreadsheetData } from '../services/RecordPageService.js';
+import { addRow, addRow2, updateRow, aggregateData, blueTeamNameData, whiteTeamNameData } from '../services/RecordPageService.js';
 
 function RecordPage() {
   // 사용자 데이터 상태
@@ -41,9 +41,20 @@ function RecordPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchSpreadsheetData(); // 데이터 가져오기
+        const blueNameData = await blueTeamNameData(); // 데이터 가져오기
+        const whiteNameData = await whiteTeamNameData(); // 데이터 가져오기
 
-        const processedData = data.map((row, index) => ({
+        const processedData = blueNameData.map((row, index) => ({
+          id: index + 1,
+          name: row[0], // 이름 열 (예: A열)
+          attendance: 0,
+          goal: '0',
+          assist: '0',
+          defense: 0,
+          mvp: 0,
+        }));
+
+        const processedData2 = whiteNameData.map((row, index) => ({
           id: index + 1,
           name: row[0], // 이름 열 (예: A열)
           attendance: 0,
@@ -54,7 +65,7 @@ function RecordPage() {
         }));
 
         setRows(processedData);
-        setRows2(processedData);
+        setRows2(processedData2);
       } catch (error) {
         console.error('데이터를 가져오는 중 오류가 발생했습니다:', error);
       }
@@ -122,7 +133,7 @@ function RecordPage() {
         <tbody>
           {rows.map((row) => (
             <tr key={row.id}>
-              <td>{row.name}</td>
+              <td class="name-cell">{row.name}</td>
               <td>
                 <div>
                   <label>
@@ -142,10 +153,10 @@ function RecordPage() {
                     min="0"
                     readOnly
                   />
-                  <button onClick={() => setRows(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows))}>
+                  <button class="button" onClick={() => setRows(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows))}>
                     -
                   </button>
-                  <button onClick={() => setRows(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows))}>
+                  <button class="button" onClick={() => setRows(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows))}>
                     +
                   </button>
                 </div>
@@ -158,10 +169,10 @@ function RecordPage() {
                     min="0"
                     readOnly
                   />
-                  <button onClick={() => setRows(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows))}>
+                  <button class="button" onClick={() => setRows(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows))}>
                     -
                   </button>
-                  <button onClick={() => setRows(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows))}>
+                  <button class="button" onClick={() => setRows(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows))}>
                     +
                   </button>
                 </div>
@@ -228,7 +239,7 @@ function RecordPage() {
         <tbody>
           {rows2.map((row) => (
             <tr key={row.id}>
-              <td>{row.name}</td>
+              <td class="name-cell">{row.name}</td>
               <td>
                 <div>
                   <label>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import MainPage from './mainPage'; // mainPage.js 파일에서 MainPage 컴포넌트를 불러옵니다.
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; // react-router-dom 추가
 //react-router-dom 버전 6부터는 Switch 컴포넌트 대신 Routes 컴포넌트를 사용해야 합니다.
+// react-router-dom 추가
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; 
 import RecordPage from './RecordPage'; // RecordPage.js 파일에서 RecordPage 컴포넌트를 불러옵니다.
 import clearLogo from '../assets/clearLogo.png'; // 로고 이미지 파일 import
 import '../styles/BodyPage.css'; // 스타일 파일 import
@@ -11,8 +12,7 @@ const Header = ({ setCurrentPage }) => (
   <header className="header">
     <nav>
     <Link to="/"><img src={clearLogo} alt="Logo" /> {/* 로고 클릭 시 main 페이지로 이동 */}</Link>
-    <Link to="/record">관리자</Link> {/* 'record' 페이지로 이동 */}
-
+    <Link to="/record">기록출력</Link> {/* 'record' 페이지로 이동 */}
     </nav>
   </header>
 );
@@ -20,7 +20,7 @@ const Header = ({ setCurrentPage }) => (
 // Footer Component: 웹 페이지의 하단 푸터를 렌더링합니다.
 const Footer = () => (
   <footer className="footer">
-    <p>&copy; 2025 My Website. All rights reserved.</p>
+    <p>&copy; COPYRIGHT ⓒ 2002 KOREA PINK BALL TOKYO SOCCER CLUB. ALL RIGHTS RESERVED</p>
   </footer>
 );
 
