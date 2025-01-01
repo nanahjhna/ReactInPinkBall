@@ -1,9 +1,6 @@
 // React와 필요한 라이브러리들을 import
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; // 라우팅을 위해 react-router-dom 사용
-import clearLogo from '../assets/clearLogo.png'; // 로고 이미지 파일 import
 import '../styles/mainPage.css'; // 스타일 파일 import
-import RecordPage from './RecordPage'; // RecordPage 컴포넌트 import
 import { gapi } from "gapi-script"; // Google API 클라이언트를 사용하기 위해 gapi import
 
 // Google Spreadsheet 관련 변수들
@@ -61,19 +58,7 @@ function App() {
   }, [currentPage]); // currentPage가 변경될 때마다 실행
 
   return (
-    <Router> {/* React Router를 사용하여 라우팅 설정 */}
       <div className="App">
-        <header className="header"> {/* 헤더 영역 */}
-          <nav>
-            <Link to="/main" onClick={() => setCurrentPage("main")}>
-              <img src={clearLogo} alt="Logo" /> {/* 로고 클릭 시 'main' 페이지로 이동 */}
-            </Link>
-            {/* 메뉴 항목들 */}
-            {/*<Link to="#about">소개</Link>
-            <Link to="#members">회원</Link>
-            <Link to="/record" onClick={() => setCurrentPage("record")}>관리자</Link> */}
-          </nav>
-        </header>
         <div>
           {currentPage === "main" && ( // 현재 페이지가 'main'일 경우에만 실행
             <>
@@ -113,19 +98,7 @@ function App() {
           <h2>생일 축하드립니다^^</h2> {/* 생일 축하 메시지 */}
         </div>
 
-        {/* 라우팅 설정 */}
-        <Routes>
-          <Route path="/main" element={<MainPage />} /> {/* '/main' 경로는 MainPage 컴포넌트 */}
-          <Route path="/record" element={<RecordPage />} /> {/* '/record' 경로는 RecordPage 컴포넌트 */}
-        </Routes>
       </div>
-    </Router>
   );
 }
-
-// MainPage 컴포넌트는 비워두기만 함
-function MainPage() {
-  return;
-}
-
 export default App; // App 컴포넌트 내보내기
