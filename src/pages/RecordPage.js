@@ -315,7 +315,7 @@ function RecordPage() {
 
       {/* 집계 버튼 */}
       <h2><button onClick={() => setResult(aggregateData(rows, rows2))}>집계하기</button></h2>
-      <h2><button onClick={() => downloadCSV(rows, rows2)}>CSV 다운로드</button></h2>
+      <h2><button onClick={() => downloadCSV(rows, rows2)}>CSV다운</button></h2>
       {/* 집계 결과를 표시하는 textarea */}
       <textarea value={result} readOnly rows="10" cols="50"></textarea>
     </div>

@@ -137,8 +137,6 @@ export const aggregateData = (blueTeamRows, whiteTeamRows) => {
   오늘 하루 고생하셨습니다
       `;
 
-    // 결과를 상태에 업데이트
-    downloadCSV(blueTeamRows, whiteTeamRows);
     return resultMessage;
   } else {
     alert("집계를 취소합니다.");
@@ -148,15 +146,15 @@ export const aggregateData = (blueTeamRows, whiteTeamRows) => {
 // 현재 시간
 const now = new Date();
 
-// // YYYYMMDDHHMMSS 형식 출력
-// const formattedTime = [
-//   now.getFullYear(),
-//   String(now.getMonth() + 1).padStart(2, "0"),
-//   String(now.getDate()).padStart(2, "0"),
-//   String(now.getHours()).padStart(2, "0"),
-//   String(now.getMinutes()).padStart(2, "0"),
-//   String(now.getSeconds()).padStart(2, "0"),
-// ].join("");
+// YYYYMMDDHHMMSS 형식 출력
+const formattedTime = [
+  now.getFullYear(),
+  String(now.getMonth() + 1).padStart(2, "0"),
+  String(now.getDate()).padStart(2, "0"),
+  String(now.getHours()).padStart(2, "0"),
+  String(now.getMinutes()).padStart(2, "0"),
+  String(now.getSeconds()).padStart(2, "0"),
+].join("");
 
 export const convertRowsToCSV = (rows) => {
   const headers = ["이름", "출석", "득점", "어시", "수비", "MVP"];
@@ -193,6 +191,3 @@ export const downloadCSV = (rows, rows2) => {
     URL.revokeObjectURL(url);
   }
 };
-
-
-
