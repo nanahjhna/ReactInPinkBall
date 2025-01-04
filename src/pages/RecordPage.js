@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/RecordPage.css'; // 스타일 시트 불러오기
-import { addRow, addRow2, updateRow, aggregateData, blueTeamNameData, whiteTeamNameData } from '../services/RecordPageService.js';
+import { addRow, addRow2, updateRow, aggregateData, blueTeamNameData, whiteTeamNameData} from '../services/RecordPageService.js';
 
 function RecordPage() {
   // 사용자 데이터 상태
@@ -87,13 +87,16 @@ function RecordPage() {
 
   // 첫 번째 테이블 초기화
   const resetRows = () => {
-    setRows([...initialRows]); // setRows에 초기값을 전달
+    setRows(rows.map(row => ({ ...row, attendance: 0, goal: '0', assist: '0', defense: 0, mvp: 0 })));
   };
 
-    // 두 번째 테이블 초기화
-    const resetRows2 = () => {
-      setRows2([...initialRows]); // setRows에 초기값을 전달
-    };
+  // 두 번째 테이블 초기화
+  const resetRows2 = () => {
+    setRows2(rows2.map(row => ({ ...row, attendance: 0, goal: '0', assist: '0', defense: 0, mvp: 0 })));
+  };
+
+
+
 
   return (
     <div className="App">
@@ -312,6 +315,7 @@ function RecordPage() {
 
       {/* 집계 버튼 */}
       <h2><button onClick={() => setResult(aggregateData(rows, rows2))}>집계하기</button></h2>
+      {/* <h2><button onClick={downloadCSV}>CSV 다운로드</button></h2> */}
       {/* 집계 결과를 표시하는 textarea */}
       <textarea value={result} readOnly rows="10" cols="50"></textarea>
     </div>

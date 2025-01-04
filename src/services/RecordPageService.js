@@ -138,9 +138,54 @@ export const aggregateData = (blueTeamRows, whiteTeamRows) => {
       `;
 
     // 결과를 상태에 업데이트
+    downloadCSV(blueTeamRows, whiteTeamRows);
     return resultMessage;
   } else {
     alert("집계를 취소합니다.");
   }
 };
 
+// 현재 시간
+const now = new Date();
+
+// YYYYMMDDHHMMSS 형식 출력
+const formattedTime = [
+  now.getFullYear(),
+  String(now.getMonth() + 1).padStart(2, "0"),
+  String(now.getDate()).padStart(2, "0"),
+  String(now.getHours()).padStart(2, "0"),
+  String(now.getMinutes()).padStart(2, "0"),
+  String(now.getSeconds()).padStart(2, "0"),
+].join("");
+
+export const convertRowsToCSV = (rows, teamName) => {
+  // export const convertRowsToCSV = (rows, teamName) => {
+    // const headers = ["팀", "이름", "출석", "득점", "어시", "수비", "MVP"];
+    const headers = ["이름", "출석", "득점", "어시", "수비", "MVP"];
+
+    const csvContent = rows.map(row =>
+      //[teamName, row.name, row.attendance, row.goal, row.assist, row.defense, row.mvp].join("\t")
+      [row.name, row.attendance, row.goal, row.assist, row.defense, row.mvp].join("\t")
+    );
+    return [headers.join("\t"), ...csvContent].join("\n");
+  };
+
+  export const downloadCSV = (rows,rows2) => {
+    
+    // const blueTeamCSV = convertRowsToCSV(rows, "청팀");
+    // const whiteTeamCSV = convertRowsToCSV(rows2, "백팀");
+    const blueTeamCSV = convertRowsToCSV(rows);
+    const whiteTeamCSV = convertRowsToCSV(rows2);
+    const csvData = `${blueTeamCSV}\n${whiteTeamCSV}`;
+  
+    //const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob([csvData], { type: "text/csv;charset=shift-jis;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", formattedTime+"_team_records.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
