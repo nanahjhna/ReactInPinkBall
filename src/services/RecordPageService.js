@@ -170,15 +170,29 @@ export const downloadCSV = (rows, rows2) => {
   const blueTeamCSV = convertRowsToCSV(rows);
   const whiteTeamCSV = convertRowsToCSV(rows2);
   const csvData = `${blueTeamCSV}\n${whiteTeamCSV}`;
-
   const formattedTime = new Date().toISOString().replace(/[:.-]/g, "_").slice(0, 15);
-  const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  const url = URL.createObjectURL(blob);
+  
+  // UTF-8 BOM 추가
+  const bom = "\uFEFF";
+  const blob = new Blob([bom + csvData], { type: "text/csv;charset=utf-8;" });
 
-  link.setAttribute("href", url);
-  link.setAttribute("download", `${formattedTime}_team_records.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  if (navigator.msSaveBlob) {
+    // For IE/Edge compatibility
+    navigator.msSaveBlob(blob, `${formattedTime}_team_records.csv`);
+  } else {
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${formattedTime}_team_records.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Cleanup
+    URL.revokeObjectURL(url);
+  }
 };
+
+
+
