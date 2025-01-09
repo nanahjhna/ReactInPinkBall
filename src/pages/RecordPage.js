@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/RecordPage.css'; // 스타일 시트 불러오기
-import { addRow, addRow2, updateRow, aggregateData, blueTeamNameData, whiteTeamNameData, downloadCSV} from '../services/RecordPageService.js';
+import { addRow, addRow2, updateRow, aggregateData, blueTeamNameData, whiteTeamNameData, downloadCSV } from '../services/RecordPageService.js';
 
 function RecordPage() {
   // 사용자 데이터 상태
@@ -43,22 +43,22 @@ function RecordPage() {
       try {
         const blueNameData = await blueTeamNameData(); // 데이터 가져오기
         const whiteNameData = await whiteTeamNameData(); // 데이터 가져오기
-
         const processedData = blueNameData.map((row, index) => ({
           id: index + 1,
           name: row[0], // 이름 열 (예: A열)
-          attendance: 0,
-          goal: '0',
-          assist: '0',
+          attendance: +row[1], // 숫자로 변환
+          goal: row[2] ? row[2] : '0', // row[2] 값이 없으면 '0'으로 설정
+          assist: row[3] ? row[3] : '0', // row[2] 값이 없으면 '0'으로 설정
           defense: 0,
           mvp: 0,
         }));
 
+
         const processedData2 = whiteNameData.map((row, index) => ({
           id: index + 1,
           name: row[0], // 이름 열 (예: A열)
-          attendance: 0,
-          goal: '0',
+          attendance: +row[1], // 숫자로 변환
+          goal: row[2] ? row[2] : '0', // row[2] 값이 없으면 '0'으로 설정
           assist: '0',
           defense: 0,
           mvp: 0,
@@ -134,77 +134,96 @@ function RecordPage() {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={row.id}>
-              <td class="name-cell">{row.name}</td>
-              <td>
-                <div>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={row.attendance === 1}
-                      onChange={() => setRows(updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, rows))}
-                    />
-                  </label>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <input
-                    type="number"
-                    value={row.goal}
-                    min="0"
-                    readOnly
-                  />
-                  <button class="button" onClick={() => setRows(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows))}>
-                    -
-                  </button>
-                  <button class="button" onClick={() => setRows(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows))}>
-                    +
-                  </button>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <input
-                    type="number"
-                    value={row.assist}
-                    min="0"
-                    readOnly
-                  />
-                  <button class="button" onClick={() => setRows(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows))}>
-                    -
-                  </button>
-                  <button class="button" onClick={() => setRows(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows))}>
-                    +
-                  </button>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={row.defense === 1}
-                      onChange={() => setRows(updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, rows))}
-                    />
-                  </label>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={row.mvp === 1}
-                      onChange={() => setRows(updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, rows))}
-                    />
-                  </label>
-                </div>
-              </td>
-            </tr>
-          ))}
+          {rows
+            .filter((row) => row.name && row.name.trim() !== '') // 이름이 공백이거나 null인 경우 제외
+            .map((row) => (
+              <tr key={row.id}>
+                <td className="name-cell">{row.name}</td>
+                <td>
+                  <div>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={row.attendance === 1}
+                        onChange={() =>
+                          setRows(updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, rows))
+                        }
+                      />
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <input type="number" value={row.goal} min="0" readOnly />
+                    <button
+                      className="button"
+                      onClick={() =>
+                        setRows(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows))
+                      }
+                    >
+                      -
+                    </button>
+                    <button
+                      className="button"
+                      onClick={() =>
+                        setRows(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows))
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <input type="number" value={row.assist} min="0" readOnly />
+                    <button
+                      className="button"
+                      onClick={() =>
+                        setRows(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows))
+                      }
+                    >
+                      -
+                    </button>
+                    <button
+                      className="button"
+                      onClick={() =>
+                        setRows(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows))
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={row.defense === 1}
+                        onChange={() =>
+                          setRows(updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, rows))
+                        }
+                      />
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={row.mvp === 1}
+                        onChange={() =>
+                          setRows(updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, rows))
+                        }
+                      />
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
+
       </table>
       {/* 두 번째 표 (백팀) */}
       <h2>백팀
@@ -240,82 +259,98 @@ function RecordPage() {
           </tr>
         </thead>
         <tbody>
-          {rows2.map((row) => (
-            <tr key={row.id}>
-              <td class="name-cell">{row.name}</td>
-              <td>
-                <div>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={row.attendance === 1}
-                      onChange={() => setRows2(updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, rows2))}
-                    />
-                  </label>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <input
-                    type="number"
-                    value={row.goal}
-                    min="0"
-                    readOnly
-                  />
-                  <button onClick={() => setRows2(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows2))}>
-                    -
-                  </button>
-                  <button onClick={() => setRows2(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows2))}>
-                    +
-                  </button>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <input
-                    type="number"
-                    value={row.assist}
-                    min="0"
-                    readOnly
-                  />
-                  <button onClick={() => setRows2(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows2))}>
-                    -
-                  </button>
-                  <button onClick={() => setRows2(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows2))}>
-                    +
-                  </button>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={row.defense === 1}
-                      onChange={() => setRows2(updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, rows2))}
-                    />
-                  </label>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={row.mvp === 1}
-                      onChange={() => setRows2(updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, rows2))}
-                    />
-                  </label>
-                </div>
-              </td>
-            </tr>
-          ))}
+          {rows2
+            .filter((row) => row.name && row.name.trim() !== '') // 이름이 공백이거나 null인 경우 제외
+            .map((row) => (
+              <tr key={row.id}>
+                <td className="name-cell">{row.name}</td>
+                <td>
+                  <div>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={row.attendance === 1}
+                        onChange={() =>
+                          setRows2(updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, rows2))
+                        }
+                      />
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <input type="number" value={row.goal} min="0" readOnly />
+                    <button
+                      onClick={() =>
+                        setRows2(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows2))
+                      }
+                    >
+                      -
+                    </button>
+                    <button
+                      onClick={() =>
+                        setRows2(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows2))
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <input type="number" value={row.assist} min="0" readOnly />
+                    <button
+                      onClick={() =>
+                        setRows2(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows2))
+                      }
+                    >
+                      -
+                    </button>
+                    <button
+                      onClick={() =>
+                        setRows2(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows2))
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={row.defense === 1}
+                        onChange={() =>
+                          setRows2(updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, rows2))
+                        }
+                      />
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={row.mvp === 1}
+                        onChange={() =>
+                          setRows2(updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, rows2))
+                        }
+                      />
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
       {/* 집계 버튼 */}
-      <h2><button onClick={() => setResult(aggregateData(rows, rows2))}>집계하기</button></h2>
-      <h2><button onClick={() => downloadCSV(rows, rows2)}>CSV다운</button></h2>
+      <h2>
+        <button onClick={() => setResult(aggregateData(rows, rows2))}>집계하기</button>
+        <button onClick={() => downloadCSV(rows, rows2)}>CSV다운</button>
+      </h2>
       {/* 집계 결과를 표시하는 textarea */}
       <textarea value={result} readOnly rows="10" cols="50"></textarea>
     </div>
