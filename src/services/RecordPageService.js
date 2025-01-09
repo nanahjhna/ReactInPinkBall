@@ -6,7 +6,7 @@ import axios from 'axios';
 export const blueTeamNameData = async () => {
   const SHEET_ID = "1lceeIMn6B_-DJABboN6vcTe5jdOz8GvfYX6nVdPe3DU"; // 사용할 Google 스프레드시트 ID
   const API_KEY = "AIzaSyAKnbmtCHWHmNTWW7hwq09GmAo11uHxZQk"; // GCP에서 발급받은 API 키
-  const RANGE = "기록!B8:B47"; // 데이터를 가져올 범위
+  const RANGE = "기록!B8:G47"; // 데이터를 가져올 범위
 
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
   const response = await axios.get(url);
@@ -22,7 +22,7 @@ export const blueTeamNameData = async () => {
 export const whiteTeamNameData = async () => {
   const SHEET_ID = "1lceeIMn6B_-DJABboN6vcTe5jdOz8GvfYX6nVdPe3DU"; // 사용할 Google 스프레드시트 ID
   const API_KEY = "AIzaSyAKnbmtCHWHmNTWW7hwq09GmAo11uHxZQk"; // GCP에서 발급받은 API 키
-  const RANGE = "기록!L8:L47"; // 데이터를 가져올 범위
+  const RANGE = "기록!L8:Q47"; // 데이터를 가져올 범위
 
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
   const response = await axios.get(url);
@@ -158,9 +158,11 @@ const formattedTime = [
 
 export const convertRowsToCSV = (rows) => {
   const headers = ["이름", "출석", "득점", "어시", "수비", "MVP"];
-  const csvContent = rows.map(row =>
-    [row.name, row.attendance, row.goal, row.assist, row.defense, row.mvp].join("\t")
-  );
+  const csvContent = rows
+    .filter(row => row.name && row.name.trim() !== "") // 이름이 공백이거나 비어 있는 경우 제외
+    .map(row =>
+      [row.name, row.attendance, row.goal, row.assist, row.defense, row.mvp].join("\t")
+    );
   return [headers.join("\t"), ...csvContent].join("\n");
 };
 
