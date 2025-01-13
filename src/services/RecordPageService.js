@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-
-
 // 청팀 스프레드시트 데이터 가져오기
 export const blueTeamNameData = async () => {
   const SHEET_ID = "1lceeIMn6B_-DJABboN6vcTe5jdOz8GvfYX6nVdPe3DU"; // 사용할 Google 스프레드시트 ID
@@ -52,19 +50,19 @@ export const addRow = (rows, teamName = '신입') => {
   return [...rows, newRow];
 };
 
-  // 백팀에 행 추가 함수
-  export const addRow2 = (rows2, teamName = '신입') => {
-    const newRow = {
-      id: rows2.length + 1,
-      name: `${teamName}`,
-      attendance: 0,
-      goal: '0',
-      assist: '0',
-      defense: 0,
-      mvp: 0,
-    };
-    return [...rows2, newRow]; // 기존 배열에 새 행을 추가한 새로운 배열 반환
+// 백팀에 행 추가 함수
+export const addRow2 = (rows2, teamName = '신입') => {
+  const newRow = {
+    id: rows2.length + 1,
+    name: `${teamName}`,
+    attendance: 0,
+    goal: '0',
+    assist: '0',
+    defense: 0,
+    mvp: 0,
   };
+  return [...rows2, newRow]; // 기존 배열에 새 행을 추가한 새로운 배열 반환
+};
 
 // 데이터 합산 및 결과 메시지 생성
 // aggregateData 함수를 매개변수 기반으로 변경
@@ -143,18 +141,8 @@ export const aggregateData = (blueTeamRows, whiteTeamRows) => {
   }
 };
 
-// 현재 시간
-const now = new Date();
-
 // YYYYMMDDHHMMSS 형식 출력
-const formattedTime = [
-  now.getFullYear(),
-  String(now.getMonth() + 1).padStart(2, "0"),
-  String(now.getDate()).padStart(2, "0"),
-  String(now.getHours()).padStart(2, "0"),
-  String(now.getMinutes()).padStart(2, "0"),
-  String(now.getSeconds()).padStart(2, "0"),
-].join("");
+const formattedTime = new Date().getFullYear();
 
 export const convertRowsToCSV = (rows) => {
   const headers = ["이름", "출석", "득점", "어시", "수비", "MVP"];
@@ -171,7 +159,7 @@ export const downloadCSV = (rows, rows2) => {
   const whiteTeamCSV = convertRowsToCSV(rows2);
   const csvData = `${blueTeamCSV}\n${whiteTeamCSV}`;
   const formattedTime = new Date().toISOString().replace(/[:.-]/g, "_").slice(0, 15);
-  
+
   // UTF-8 BOM 추가
   const bom = "\uFEFF";
   const blob = new Blob([bom + csvData], { type: "text/csv;charset=utf-8;" });

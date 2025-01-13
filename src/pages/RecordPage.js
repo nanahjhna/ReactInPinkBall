@@ -16,6 +16,11 @@ function RecordPage() {
   const [newMb2, setNewMb2] = useState(''); // 사용자 입력값 상태 관리
   const [showInput2, setShowInput2] = useState(false); // 입력창 표시 여부
 
+  const [isBlueTableVisible, setIsBlueTableVisible] = useState(true);
+  const [isWhiteTableVisible, setIsWhiteTableVisible] = useState(true);
+
+  const toggleBlueTable = () => setIsBlueTableVisible(!isBlueTableVisible);
+  const toggleWhiteTable = () => setIsWhiteTableVisible(!isWhiteTableVisible);
 
   const handleAddRow = () => {
     if (newMb.trim()) { // 이름이 비어있지 않으면
@@ -47,8 +52,9 @@ function RecordPage() {
           id: index + 1,
           name: row[0], // 이름 열 (예: A열)
           attendance: +row[1], // 숫자로 변환
-          goal: row[2] ? row[2] : '0', // row[2] 값이 없으면 '0'으로 설정
-          assist: row[3] ? row[3] : '0', // row[2] 값이 없으면 '0'으로 설정
+          // goal: row[2] ? row[2] : '0', // row[2] 값이 없으면 '0'으로 설정
+          goal: 0,
+          assist: 0,
           defense: 0,
           mvp: 0,
         }));
@@ -58,8 +64,8 @@ function RecordPage() {
           id: index + 1,
           name: row[0], // 이름 열 (예: A열)
           attendance: +row[1], // 숫자로 변환
-          goal: row[2] ? row[2] : '0', // row[2] 값이 없으면 '0'으로 설정
-          assist: '0',
+          goal: 0,
+          assist: 0,
           defense: 0,
           mvp: 0,
         }));
@@ -74,17 +80,6 @@ function RecordPage() {
     fetchData();
   }, []);
 
-  // 초기 데이터 정의
-  const initialRows = rows.map((row, index) => ({
-    id: index + 1,
-    name: row.name, // rows 배열에서 name 값을 가져옵니다
-    attendance: 0,
-    goal: '0',
-    assist: '0',
-    defense: 0,
-    mvp: 0,
-  }));
-
   // 첫 번째 테이블 초기화
   const resetRows = () => {
     setRows(rows.map(row => ({ ...row, attendance: 0, goal: '0', assist: '0', defense: 0, mvp: 0 })));
@@ -95,13 +90,11 @@ function RecordPage() {
     setRows2(rows2.map(row => ({ ...row, attendance: 0, goal: '0', assist: '0', defense: 0, mvp: 0 })));
   };
 
-
-
-
   return (
     <div className="App">
       {/* 첫 번째 표 */}
       <h2>청팀
+        <button onClick={toggleBlueTable}>{isBlueTableVisible ? '숨기기' : '보이기'}</button>
         {/* 행 추가 버튼 */}
         <button onClick={() => setShowInput(true)}>행 추가</button>
 
@@ -122,111 +115,114 @@ function RecordPage() {
         {/* 표 */}
         <button onClick={resetRows}>초기화</button>
       </h2>
-      <table className="table1">
-        <thead>
-          <tr>
-            <th>이름</th>
-            <th>출석</th>
-            <th>득점</th>
-            <th>어시</th>
-            <th>수비</th>
-            <th>MVP</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows
-            .filter((row) => row.name && row.name.trim() !== '') // 이름이 공백이거나 null인 경우 제외
-            .map((row) => (
-              <tr key={row.id}>
-                <td className="name-cell">{row.name}</td>
-                <td>
-                  <div>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={row.attendance === 1}
-                        onChange={() =>
-                          setRows(updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, rows))
+      {isBlueTableVisible && (
+        <table className="table1">
+          <thead>
+            <tr>
+              <th>이름</th>
+              <th>출석</th>
+              <th>득점</th>
+              <th>어시</th>
+              <th>수비</th>
+              <th>MVP</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows
+              .filter((row) => row.name && row.name.trim() !== '') // 이름이 공백이거나 null인 경우 제외
+              .map((row) => (
+                <tr key={row.id}>
+                  <td className="name-cell">{row.name}</td>
+                  <td>
+                    <div>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={row.attendance === 1}
+                          onChange={() =>
+                            setRows(updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, rows))
+                          }
+                        />
+                      </label>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <button
+                        className="button"
+                        onClick={() =>
+                          setRows(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows))
                         }
-                      />
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="number" value={row.goal} min="0" readOnly />
-                    <button
-                      className="button"
-                      onClick={() =>
-                        setRows(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows))
-                      }
-                    >
-                      -
-                    </button>
-                    <button
-                      className="button"
-                      onClick={() =>
-                        setRows(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows))
-                      }
-                    >
-                      +
-                    </button>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="number" value={row.assist} min="0" readOnly />
-                    <button
-                      className="button"
-                      onClick={() =>
-                        setRows(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows))
-                      }
-                    >
-                      -
-                    </button>
-                    <button
-                      className="button"
-                      onClick={() =>
-                        setRows(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows))
-                      }
-                    >
-                      +
-                    </button>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={row.defense === 1}
-                        onChange={() =>
-                          setRows(updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, rows))
+                      >
+                        -
+                      </button>
+                      <input type="number" value={row.goal} min="0" readOnly />
+                      <button
+                        className="button"
+                        onClick={() =>
+                          setRows(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows))
                         }
-                      />
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={row.mvp === 1}
-                        onChange={() =>
-                          setRows(updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, rows))
+                      >
+                        +
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <button
+                        className="button"
+                        onClick={() =>
+                          setRows(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows))
                         }
-                      />
-                    </label>
-                  </div>
-                </td>
-              </tr>
-            ))}
-        </tbody>
+                      >
+                        -
+                      </button>
+                      <input type="number" value={row.assist} min="0" readOnly />
+                      <button
+                        className="button"
+                        onClick={() =>
+                          setRows(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows))
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={row.defense === 1}
+                          onChange={() =>
+                            setRows(updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, rows))
+                          }
+                        />
+                      </label>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={row.mvp === 1}
+                          onChange={() =>
+                            setRows(updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, rows))
+                          }
+                        />
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
 
-      </table>
+        </table>
+      )}
       {/* 두 번째 표 (백팀) */}
       <h2>백팀
+        <button onClick={toggleWhiteTable}>{isWhiteTableVisible ? '숨기기' : '보이기'}</button>
         {/* 행 추가 버튼 */}
         <button onClick={() => setShowInput2(true)}>행 추가</button>
 
@@ -247,105 +243,106 @@ function RecordPage() {
         {/* 표 */}
         <button onClick={resetRows2}>초기화</button>
       </h2>
-      <table className="table2">
-        <thead>
-          <tr>
-            <th>이름</th>
-            <th>출석</th>
-            <th>득점</th>
-            <th>어시</th>
-            <th>수비</th>
-            <th>MVP</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows2
-            .filter((row) => row.name && row.name.trim() !== '') // 이름이 공백이거나 null인 경우 제외
-            .map((row) => (
-              <tr key={row.id}>
-                <td className="name-cell">{row.name}</td>
-                <td>
-                  <div>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={row.attendance === 1}
-                        onChange={() =>
-                          setRows2(updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, rows2))
+      {isWhiteTableVisible && (
+        <table className="table2">
+          <thead>
+            <tr>
+              <th>이름</th>
+              <th>출석</th>
+              <th>득점</th>
+              <th>어시</th>
+              <th>수비</th>
+              <th>MVP</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows2
+              .filter((row) => row.name && row.name.trim() !== '') // 이름이 공백이거나 null인 경우 제외
+              .map((row) => (
+                <tr key={row.id}>
+                  <td className="name-cell">{row.name}</td>
+                  <td>
+                    <div>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={row.attendance === 1}
+                          onChange={() =>
+                            setRows2(updateRow(row.id, 'attendance', row.attendance === 1 ? 0 : 1, rows2))
+                          }
+                        />
+                      </label>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <button
+                        onClick={() =>
+                          setRows2(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows2))
                         }
-                      />
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="number" value={row.goal} min="0" readOnly />
-                    <button
-                      onClick={() =>
-                        setRows2(updateRow(row.id, 'goal', Math.max(parseInt(row.goal) - 1, 0), rows2))
-                      }
-                    >
-                      -
-                    </button>
-                    <button
-                      onClick={() =>
-                        setRows2(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows2))
-                      }
-                    >
-                      +
-                    </button>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <input type="number" value={row.assist} min="0" readOnly />
-                    <button
-                      onClick={() =>
-                        setRows2(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows2))
-                      }
-                    >
-                      -
-                    </button>
-                    <button
-                      onClick={() =>
-                        setRows2(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows2))
-                      }
-                    >
-                      +
-                    </button>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={row.defense === 1}
-                        onChange={() =>
-                          setRows2(updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, rows2))
+                      >
+                        -
+                      </button>
+                      <input type="number" value={row.goal} min="0" readOnly />
+                      <button
+                        onClick={() =>
+                          setRows2(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows2))
                         }
-                      />
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={row.mvp === 1}
-                        onChange={() =>
-                          setRows2(updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, rows2))
+                      >
+                        +
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <button
+                        onClick={() =>
+                          setRows2(updateRow(row.id, 'assist', Math.max(parseInt(row.assist) - 1, 0), rows2))
                         }
-                      />
-                    </label>
-                  </div>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-
+                      >
+                        -
+                      </button>
+                      <input type="number" value={row.assist} min="0" readOnly />
+                      <button
+                        onClick={() =>
+                          setRows2(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows2))
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={row.defense === 1}
+                          onChange={() =>
+                            setRows2(updateRow(row.id, 'defense', row.defense === 1 ? 0 : 1, rows2))
+                          }
+                        />
+                      </label>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={row.mvp === 1}
+                          onChange={() =>
+                            setRows2(updateRow(row.id, 'mvp', row.mvp === 1 ? 0 : 1, rows2))
+                          }
+                        />
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      )}
       {/* 집계 버튼 */}
       <h2>
         <button onClick={() => setResult(aggregateData(rows, rows2))}>집계하기</button>
