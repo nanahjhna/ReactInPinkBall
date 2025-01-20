@@ -32,9 +32,27 @@ export const whiteTeamNameData = async () => {
   }
 };
 
-// 특정 행의 값을 업데이트
+// // 특정 행의 값을 업데이트
 export const updateRow = (id, key, value, rows) =>
-  rows.map(row => (row.id === id ? { ...row, [key]: value } : row));
+  rows.map(row => {
+    // 특정 행을 찾았을 때
+    if (row.id === id) {
+      // 만약 attendance가 0이면 goal, assist, defense, mvp 값을 0으로 설정
+      if (key === 'attendance' && value === 0) {
+        return { 
+          ...row, 
+          [key]: value, 
+          goal: 0, 
+          assist: 0, 
+          defense: 0, 
+          mvp: 0 
+        };
+      }
+      // attendance가 변경되지 않았거나 다른 값이라면 기존 값을 유지
+      return { ...row, [key]: value };
+    }
+    return row;
+  });
 
 // 새로운 행 추가
 export const addRow = (rows, teamName = '신입') => {
