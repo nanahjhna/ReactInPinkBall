@@ -92,6 +92,15 @@ function RecordPage() {
     setRows2(rows2.map(row => ({ ...row, attendance: 0, goal: '0', assist: '0', defense: 0, mvp: 0 })));
   };
 
+  const moveRow = (id, newTeam, currentRows, targetRows, setCurrentRows, setTargetRows) => {
+    const rowToMove = currentRows.find(row => row.id === id); // 이동할 행 찾기
+    if (rowToMove) {
+      const updatedRow = { ...rowToMove, id: targetRows.length + 1, team: newTeam }; // 새 ID와 팀 정보 업데이트
+      setCurrentRows(currentRows.filter(row => row.id !== id)); // 현재 팀에서 제거
+      setTargetRows([...targetRows, updatedRow]); // 대상 팀에 추가
+    }
+  };
+
   return (
     <div className="App">
       {/* 첫 번째 표 */}
@@ -139,7 +148,14 @@ function RecordPage() {
                     <select
                       value={row.team}
                       onChange={(e) =>
-                        setRows(updateRow(row.id, 'team', e.target.value, rows))
+                        moveRow(
+                          row.id,
+                          e.target.value, // 새 팀
+                          rows,           // 현재 팀 데이터
+                          rows2,          // 대상 팀 데이터
+                          setRows,        // 현재 팀 setter
+                          setRows2        // 대상 팀 setter
+                        )
                       }
                     >
                       <option value='청'>청</option>
@@ -171,7 +187,7 @@ function RecordPage() {
                       >
                         -
                       </button>
-                      <input type="number" value={row.goal} min="0" readOnly disabled={row.attendance === 0}/>
+                      <input type="number" value={row.goal} min="0" readOnly disabled={row.attendance === 0} />
                       <button
                         className="button"
                         onClick={() =>
@@ -194,7 +210,7 @@ function RecordPage() {
                       >
                         -
                       </button>
-                      <input type="number" value={row.assist} min="0" readOnly disabled={row.attendance === 0}/>
+                      <input type="number" value={row.assist} min="0" readOnly disabled={row.attendance === 0} />
                       <button
                         className="button"
                         onClick={() =>
@@ -281,11 +297,18 @@ function RecordPage() {
               .filter((row) => row.name && row.name.trim() !== '') // 이름이 공백이거나 null인 경우 제외
               .map((row) => (
                 <tr key={row.id}>
-                                    <td>
+                  <td>
                     <select
                       value={row.team}
-                      onChange={() =>
-                        setRows(updateRow(row.id, 'team', row.team === '청' ? '백' : '청', rows))
+                      onChange={(e) =>
+                        moveRow(
+                          row.id,
+                          e.target.value, // 새 팀
+                          rows2,          // 현재 팀 데이터
+                          rows,           // 대상 팀 데이터
+                          setRows2,       // 현재 팀 setter
+                          setRows         // 대상 팀 setter
+                        )
                       }
                     >
                       <option value="청">청</option>
@@ -316,7 +339,7 @@ function RecordPage() {
                       >
                         -
                       </button>
-                      <input type="number" value={row.goal} min="0" readOnly disabled={row.attendance === 0}/>
+                      <input type="number" value={row.goal} min="0" readOnly disabled={row.attendance === 0} />
                       <button
                         onClick={() =>
                           setRows2(updateRow(row.id, 'goal', parseInt(row.goal) + 1, rows2))
@@ -337,7 +360,7 @@ function RecordPage() {
                       >
                         -
                       </button>
-                      <input type="number" value={row.assist} min="0" readOnly disabled={row.attendance === 0}/>
+                      <input type="number" value={row.assist} min="0" readOnly disabled={row.attendance === 0} />
                       <button
                         onClick={() =>
                           setRows2(updateRow(row.id, 'assist', parseInt(row.assist) + 1, rows2))
