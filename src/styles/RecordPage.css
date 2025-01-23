@@ -1,15 +1,21 @@
 /* 공통 스타일 */
+html, body {
+  margin: 0; /* 기본 마진 제거 */
+  padding: 0; /* 기본 패딩 제거 */
+}
+
 table {
   max-width: 100%; /* 테이블 너비를 화면 너비에 맞춤 */
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed; /* 테이블 레이아웃 고정 */
   word-wrap: break-word; /* 긴 텍스트 줄바꿈 */
+  margin: 0; /* 테이블의 외부 여백 제거 */
 }
 
 th, td {
   text-align: center; /* 텍스트 중앙 정렬 */
-  padding: 8px;
+  padding: 4px; /* 패딩을 줄여서 공간을 확보 */
   border: 1px solid #ddd;
 }
 
@@ -17,11 +23,12 @@ td {
   background-color: #d9eaf7; /* 옅은 블루 (기본 테이블) */
   overflow: hidden; /* 넘친 텍스트 숨김 */
   text-overflow: ellipsis; /* 넘친 텍스트에 말줄임표 추가 */
-  white-space: normal; /* 텍스트 줄바꿈 허용 */
+  white-space: nowrap; /* 텍스트 개행 방지 */
 }
 
 th {
   background-color: #5F9EA0; /* 청팀 테이블 헤더 */
+  white-space: nowrap; /* 텍스트 개행 방지 */
 }
 
 /* 두 번째 테이블 스타일 (백팀) */
