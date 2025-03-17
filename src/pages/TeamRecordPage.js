@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import '../styles/RecordPage.css'; // 스타일 시트 불러오기
 import { addRow, addRow2, updateRow, aggregateData, blueTeamNameData, whiteTeamNameData, downloadCSV, SheetSend } from '../services/TeamRecordPageService.js';
+import { TeamDataContext } from '../context/TeamDataContext'; // Context 불러오기
 
 function RecordPage() {
+  const { blueTeamData, whiteTeamData } = useContext(TeamDataContext); // 전역 상태 가져오기
+
   // 사용자 데이터 상태
   const [rows, setRows] = useState([]);
   const [rows2, setRows2] = useState([]);
@@ -103,6 +106,13 @@ function RecordPage() {
 
   return (
     <div className="App">
+
+      <h3>청팀 데이터</h3>
+      <pre>{JSON.stringify(blueTeamData, null, 2)}</pre>
+
+      <h3>백팀 데이터</h3>
+      <pre>{JSON.stringify(whiteTeamData, null, 2)}</pre>
+
       {/* 첫 번째 표 */}
       <h2>청팀
         <button onClick={toggleBlueTable}>{isBlueTableVisible ? '숨기기' : '보이기'}</button>
