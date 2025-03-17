@@ -3,7 +3,7 @@ import '../styles/RecordPage.css'; // 스타일 시트 불러오기
 
 function RecordPage() {
   const [quarterData, setQuarterData] = useState(
-    Array.from({ length: 29 }, () => ({ quarter: "", goal: "", assist: "", note: "" }))
+    Array.from({ length: 10 }, () => ({ quarter: "", team: "", goal: "", assist: "" }))
   );
 
   // 입력값 변경 처리 함수
@@ -22,6 +22,11 @@ function RecordPage() {
     setWhiteTeamData(whiteData);
   };
 
+  // 행 추가 함수
+  const addRow = () => {
+    setQuarterData([...quarterData, { quarter: "", team: "", goal: "", assist: "" }]);
+  };
+
   const [blueTeamData, setBlueTeamData] = useState([]); // 청팀 저장 변수
   const [whiteTeamData, setWhiteTeamData] = useState([]); // 백팀 저장 변수
 
@@ -31,9 +36,9 @@ function RecordPage() {
         <thead>
           <tr>
             <th>쿼터</th>
+            <th>팀</th>
             <th>골</th>
             <th>어시스트</th>
-            <th>팀</th>
           </tr>
         </thead>
         <tbody>
@@ -51,20 +56,6 @@ function RecordPage() {
                     </option>
                   ))}
                 </select>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={row.goal}
-                  onChange={(e) => handleQuarterChange(index, "goal", e.target.value)}
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={row.assist}
-                  onChange={(e) => handleQuarterChange(index, "assist", e.target.value)}
-                />
               </td>
               <td>
                 <label>
@@ -88,11 +79,26 @@ function RecordPage() {
                   백
                 </label>
               </td>
+              <td>
+                <input
+                  type="text"
+                  value={row.goal}
+                  onChange={(e) => handleQuarterChange(index, "goal", e.target.value)}
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  value={row.assist}
+                  onChange={(e) => handleQuarterChange(index, "assist", e.target.value)}
+                />
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
 
+      <button onClick={addRow} style={{ marginTop: "10px" }}>행 추가</button>
       <button onClick={handleSaveData} style={{ marginLeft: "10px" }}>팀별 데이터 저장</button>
 
       <h3>청팀 데이터</h3>
