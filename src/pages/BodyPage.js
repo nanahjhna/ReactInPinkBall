@@ -7,6 +7,7 @@ import RecordPage from './RecordPage'; // RecordPage.js 파일에서 RecordPage 
 import TeamRecordPage from './TeamRecordPage'; // TeamRecordPage.js 파일에서 RecordPage 컴포넌트를 불러옵니다.
 import clearLogo from '../assets/clearLogo.png'; // 로고 이미지 파일 import
 import '../styles/BodyPage.css'; // 스타일 파일 import
+import { TeamDataProvider } from '../context/TeamDataContext'; // Context 불러오기
 
 // Header Component: 웹 페이지의 상단 헤더를 렌더링합니다.
 const Header = ({ setCurrentPage }) => (
@@ -54,20 +55,22 @@ const App = () => {
 
   return (
     <div style={{ fontFamily: 'Arial, sans-serif' }}>
-      {/* Router로 전체 애플리케이션을 감쌉니다. */}
-      <Router>
-        <Header />
-        <main style={{ padding: '20px', minHeight: '400px' }}>
-          {/* Routes로 변경 */}
-          <Routes>
-            <Route path="/" element={<MainPage />} /> {/* 기본 경로에서 MainPage 렌더링 */}
-            <Route path="/RecordPage" element={<RecordPage />} /> {/* /record 경로에서 RecordPage 렌더링 */}
-            <Route path="/TeamRecordPage" element={<TeamRecordPage />} /> {/* /TeamRecordPage 경로에서 RecordPage 렌더링 */}
-            {/* 추가 페이지가 있을 경우 Route 추가 가능 */}
-          </Routes>
-        </main>
-        <Footer />
-      </Router>
+      <TeamDataProvider> {/* Context Provider로 감싸기 */}
+        {/* Router로 전체 애플리케이션을 감쌉니다. */}
+        <Router>
+          <Header />
+          <main style={{ padding: '20px', minHeight: '400px' }}>
+            {/* Routes로 변경 */}
+            <Routes>
+              <Route path="/" element={<MainPage />} /> {/* 기본 경로에서 MainPage 렌더링 */}
+              <Route path="/RecordPage" element={<RecordPage />} /> {/* /record 경로에서 RecordPage 렌더링 */}
+              <Route path="/TeamRecordPage" element={<TeamRecordPage />} /> {/* /TeamRecordPage 경로에서 RecordPage 렌더링 */}
+              {/* 추가 페이지가 있을 경우 Route 추가 가능 */}
+            </Routes>
+          </main>
+          <Footer />
+        </Router>
+      </TeamDataProvider>
     </div>
   );
 };
